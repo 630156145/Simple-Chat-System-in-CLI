@@ -79,20 +79,19 @@ int s_main() {
     SOCKADDR_IN addrSrv;
     addrSrv.sin_family = AF_INET;
     addrSrv.sin_port = htons(port); //1024以上的端口号
+    //INADDR_ANY就是指定地址为0.0.0.0的地址，这个地址事实上表示不确定地址，或“所有地址”、“任意地址”。 一般来说，在各个系统中均定义成为0值
+    addrSrv.sin_addr.s_addr = htonl(INADDR_ANY);
 
     SOCKET sockSrv = socket(AF_INET, SOCK_STREAM, 0);
 
-    //INADDR_ANY就是指定地址为0.0.0.0的地址，这个地址事实上表示不确定地址，或“所有地址”、“任意地址”。 一般来说，在各个系统中均定义成为0值。
-    addrSrv.sin_addr.s_addr = htonl(INADDR_ANY);
-
     if (bind(sockSrv, (LPSOCKADDR)&addrSrv, sizeof(SOCKADDR_IN)) == SOCKET_ERROR) {
-        cout << "bind error." << endl;
+        cout << "Bind error." << endl;
         if (WSAGetLastError()==10048) cout<<"server has already started." << endl;
         exit(1);
     }
 
     if (listen(sockSrv, 10) == SOCKET_ERROR) {
-        cout << "listen error" << endl;
+        cout << "Listen error" << endl;
         exit(1);
     }
 
@@ -103,7 +102,7 @@ int s_main() {
         //等待客户请求到来
         SOCKET sockRecv = accept(sockSrv, (SOCKADDR*)&addrClient, &len);
         if (sockRecv == SOCKET_ERROR) {
-            cout << "accept failed." << endl;
+            cout << "Accept failed." << endl;
             break;
         }
 

@@ -1,8 +1,7 @@
 ﻿  Client.cpp
-F:\bupt\网研保研\ChatSystem\Client.cpp(65,31): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+F:\bupt\网研保研\ChatSystem\Client.cpp(66,31): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
 F:\bupt\网研保研\ChatSystem\Client.cpp(96,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 F:\bupt\网研保研\ChatSystem\Client.cpp(105,9): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  Main.cpp
   Server.cpp
 F:\bupt\网研保研\ChatSystem\Server.cpp(38,13): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   正在生成代码...

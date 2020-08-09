@@ -9,6 +9,7 @@ using namespace std;
 const int buf_size = 100;
 const int port = 11111;//端口号
 
+
 //接收服务器发来的消息
 DWORD WINAPI recvThread(LPVOID lpParamter) {
     SOCKET sockRecv = (SOCKET)lpParamter;
@@ -73,8 +74,6 @@ int c_main() {
         return 0;
     }
 
-    char buffs[buf_size];
-
     //获取用户名
     cout << "Enter username: ";
     string username;
@@ -92,26 +91,28 @@ int c_main() {
         cin >> password;
     }
 
+    char buf[buf_size];
     //发送用户名
-    strcpy(buffs, username.data());
-    send(sockClient, buffs, sizeof(buffs), 0);
+    strcpy(buf, username.data());
+    send(sockClient, buf, sizeof(buf), 0);
 
-    //获取发送对象的id，如果对方id不存在，需要重新输入
+    //获取发送对象的id，如果对方id未登录，需要重新输入
     while (true) {
         cout << "Enter username you want to send to: ";
         string targetUser;
         cin >> targetUser;
         //发送对象
-        strcpy(buffs, targetUser.data());
-        if (send(sockClient, buffs, sizeof(buffs), 0) == SOCKET_ERROR) {
+        strcpy(buf, targetUser.data());
+        if (send(sockClient, buf, sizeof(buf), 0) == SOCKET_ERROR) {
             cout << "Sending message failed." << endl;
+            continue;
         }
-        memset(buffs, 0, sizeof(buffs));
-        if (recv(sockClient, buffs, sizeof(buffs), 0) == SOCKET_ERROR) {
+        memset(buf, 0, sizeof(buf));
+        if (recv(sockClient, buf, sizeof(buf), 0) == SOCKET_ERROR) {
             cout << "Receiving message failed." << endl;
             exit(1);
         }
-        if (strcmp(buffs, "error")==0) {
+        if (strcmp(buf, "error")==0) {
             cout << "User does not exist." << endl;
         }
         else break;
