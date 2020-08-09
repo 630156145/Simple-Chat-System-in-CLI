@@ -1,0 +1,2 @@
+F:\bupt\网研保研\ChatSystem\Debug\ChatSystem.exe
+F:\bupt\网研保研\ChatSystem\Debug\ChatSystem.pdb
