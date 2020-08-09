@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "winsock2.h"
-#include <cstdlib>
 #include <map>
 #pragma comment(lib,"ws2_32.lib")//引用库文件
 using namespace std;
@@ -14,7 +13,7 @@ map<string, int> userToSockMap;
 
 DWORD WINAPI serverThread(LPVOID lpParamter) {
     SOCKET sock = (SOCKET)lpParamter;
-    cout << "start sock " << sock << " at port " << port << endl;
+    cout << "Start socket " << sock << " at port " << port << endl;
     char recvBuf[buf_size];
     char sendBuf[buf_size];
     //接受用户信息
@@ -31,12 +30,12 @@ DWORD WINAPI serverThread(LPVOID lpParamter) {
         memset(recvBuf, 0, sizeof(recvBuf));
         if (recv(sock, recvBuf, sizeof(recvBuf), 0) == SOCKET_ERROR) {
             cout << "Receiving message failed." << endl;
-            exit(1);
+            return -1;
         }
         targetUser = recvBuf;
         if (userToSockMap.count(targetUser) == 0) { //用户不存在
             strcpy(sendBuf, "error");
-            cout <<  "User " << targetUser << " does not exist." << endl;
+            cout << "To user " << username << " - User " << targetUser << " does not exist." << endl;
             send(sock, sendBuf, sizeof(sendBuf), 0);
         }        
         else {
@@ -46,7 +45,7 @@ DWORD WINAPI serverThread(LPVOID lpParamter) {
     }
 
     int targetSock = userToSockMap[targetUser];
-    cout << "user " << username << " will send message to user " << targetUser << ", socket is " << targetSock << endl;
+    cout << "User " << username << " will send message to user " << targetUser << endl;
 
     while (true) {  //接收数据
         memset(recvBuf, 0, sizeof(recvBuf));
@@ -60,7 +59,7 @@ DWORD WINAPI serverThread(LPVOID lpParamter) {
             break;
         }
         
-        cout << "Message from user " << username << " \"" << recvBuf << "\" has sent to user " << targetUser << endl;
+        cout << "Message from user " << username << " \"" << recvBuf << "\" has been sent to user " << targetUser << endl;
     }
     closesocket(sock);
     return 0;
@@ -72,7 +71,7 @@ int s_main() {
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
         cout << "WSA startup error." << endl;
-        exit(1);
+        return -1;
     }
 
     //创建socket
@@ -87,12 +86,12 @@ int s_main() {
     if (bind(sockSrv, (LPSOCKADDR)&addrSrv, sizeof(SOCKADDR_IN)) == SOCKET_ERROR) {
         cout << "Bind error." << endl;
         if (WSAGetLastError()==10048) cout<<"server has already started." << endl;
-        exit(1);
+        return -1;
     }
 
     if (listen(sockSrv, 10) == SOCKET_ERROR) {
         cout << "Listen error" << endl;
-        exit(1);
+        return -1;
     }
 
     SOCKADDR_IN addrClient;
@@ -113,6 +112,5 @@ int s_main() {
 
     closesocket(sockSrv); //关闭套接字
     WSACleanup(); //释放初始化Ws2_32.dll所分配的资源
-    system("pause");
     return 0;
 }

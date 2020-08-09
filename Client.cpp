@@ -21,7 +21,7 @@ DWORD WINAPI recvThread(LPVOID lpParamter) {
             cout << "Receiving message failed." << endl;
             break;
         }
-        cout << "Receive message: " << recvBuf << endl;
+        cout << "[Receive message] " << recvBuf << endl;
     }
 
     closesocket(sockRecv);
@@ -51,12 +51,14 @@ int c_main() {
     map<string, string> userInfoMap;
     userInfoMap.insert(pair<string, string>("AA", "11"));
     userInfoMap.insert(pair<string, string>("BB", "22"));
+
+    cout << "Client starts." << endl;
    
     //初始化链接库
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
         cout << "WSA startup error." << endl;
-        exit(1);
+        return -1;
     }
 
     //创建socket
@@ -71,7 +73,7 @@ int c_main() {
     if (connect(sockClient, (struct  sockaddr*)&addrSrv, sizeof(addrSrv)) == INVALID_SOCKET) {
         cout << "Connect error." << endl;
         if (WSAGetLastError()==10061) cout<<"no server." << endl;
-        return 0;
+        return -1;
     }
 
     //获取用户名
@@ -101,7 +103,6 @@ int c_main() {
         cout << "Enter username you want to send to: ";
         string targetUser;
         cin >> targetUser;
-        //发送对象
         strcpy(buf, targetUser.data());
         if (send(sockClient, buf, sizeof(buf), 0) == SOCKET_ERROR) {
             cout << "Sending message failed." << endl;
@@ -110,7 +111,7 @@ int c_main() {
         memset(buf, 0, sizeof(buf));
         if (recv(sockClient, buf, sizeof(buf), 0) == SOCKET_ERROR) {
             cout << "Receiving message failed." << endl;
-            exit(1);
+            return -1;
         }
         if (strcmp(buf, "error")==0) {
             cout << "User does not exist." << endl;
